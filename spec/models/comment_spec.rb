@@ -1,5 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "validations" do
+    it "validate presence of comment" do
+      should validate_presence_of(:coment)
+    end
+  end
 end
