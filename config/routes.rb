@@ -6,5 +6,5 @@ Rails.application.routes.draw do
   get '/health', to: 'health#health'
 
   #Agregar las rutas relacionadas a un mismo recurso
-  resources :posts, only: [:index, :show]
+  resources :posts, only: [:index, :show, :create, :update]
 end
