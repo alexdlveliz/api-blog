@@ -40,10 +40,13 @@ RSpec.describe "Posts", type: :request do
   describe "GET /post/{id}" do
     #Se utilizará factory_bot para crear posts de ejemplo
     let!(:post) { create(:post) }
+    let!(:comment) { create(:comment, post_id: post.id) }
 
     it "should return a post" do
       get "/posts/#{post.id}"
       payload = JSON.parse(response.body)
+      get "/posts/#{post.id}/comments"
+      payload_comments = JSON.parse(response.body)
       expect(payload).to_not be_empty
       expect(payload["id"]).to eq(post.id)
       expect(payload["title"]).to eq(post.title)
@@ -52,6 +55,8 @@ RSpec.describe "Posts", type: :request do
       expect(payload["author"]["name"]).to eq(post.user.name)
       expect(payload["author"]["email"]).to eq(post.user.email)
       expect(payload["author"]["id"]).to eq(post.user.id)
+      expect(payload_comments).to_not be_empty
+      expect(payload_comments).to_not be_nil
       expect(response).to have_http_status(200)
     end
   end
@@ -136,20 +141,6 @@ RSpec.describe "Posts", type: :request do
       expect(payload).to_not be_empty
       expect(payload["error"]).to_not be_empty
       expect(response).to have_http_status(:unprocessable_entity)
-    end
-  end
-
-  #Prueba para ver los comentarios de un post
-  describe "GET /posts/{id}/post_comments" do
-    let!(:post) { create(:post) }
-    let!(:comment) { create(:comment, post_id: post.id) }
-    
-    it "should return the comments of a post" do
-      get "/posts/#{post.id}/comments"
-      payload = JSON.parse(response.body)
-      #byebug
-      expect(payload).to_not be_empty
-      expect(response).to have_http_status(200)
     end
   end
 end

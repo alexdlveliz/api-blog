@@ -1,5 +1,6 @@
+require "byebug"
 class PostSerializer < ActiveModel::Serializer
-  attributes :id, :title, :content, :published, :author
+  attributes :id, :title, :content, :published, :author, :comments
 
   #En los atributos definimos un 'author', pero debido a que
   #en el modelo 'author' no existe, para eso declaramos el 
