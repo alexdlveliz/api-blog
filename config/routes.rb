@@ -4,4 +4,7 @@ Rails.application.routes.draw do
   #Haciendo un get a la ruta /health
     #Vaya al controlador healt y al método health
   get '/health', to: 'health#health'
+
+  #Agregar las rutas relacionadas a un mismo recurso
+  resources :posts, only: [:index, :show]
 end
