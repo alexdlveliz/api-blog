@@ -1,5 +1,6 @@
 #Archivo creado con factory Bot
 require "rails_helper"
+require "byebug"
 
 RSpec.describe "Posts", type: :request do
   describe "GET /posts" do
@@ -55,7 +56,6 @@ RSpec.describe "Posts", type: :request do
     end
   end
 
-  
   describe "POST /posts" do
     #Prueba para crear un post
     let!(:user) { create(:user) }
@@ -139,4 +139,17 @@ RSpec.describe "Posts", type: :request do
     end
   end
 
+  #Prueba para ver los comentarios de un post
+  describe "GET /posts/{id}/post_comments" do
+    let!(:post) { create(:post) }
+    let!(:comment) { create(:comment, post_id: post.id) }
+    
+    it "should return the comments of a post" do
+      get "/posts/#{post.id}/comments"
+      payload = JSON.parse(response.body)
+      #byebug
+      expect(payload).to_not be_empty
+      expect(response).to have_http_status(200)
+    end
+  end
 end

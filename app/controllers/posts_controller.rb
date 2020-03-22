@@ -36,6 +36,12 @@ class PostsController < ApplicationController
     render json: @post, status: :ok
   end
 
+  # GET /posts/{id}/comments
+  def comments
+    @post = Post.find(params[:id]).comments
+    render json: @post, status: :ok
+  end
+
   private
   
   def create_params

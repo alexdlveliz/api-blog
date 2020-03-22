@@ -16,3 +16,11 @@ end
     user_id: User.first.id
   )
 end
+
+5.times do |comment|
+  Comment.create!(
+    comment: Faker::Lorem.paragraph,
+    user_id: User.first.id,
+    post_id: Post.first.id
+  )
+end
