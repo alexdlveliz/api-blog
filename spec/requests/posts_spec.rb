@@ -45,8 +45,11 @@ RSpec.describe "Posts", type: :request do
     it "should return a post" do
       get "/posts/#{post.id}"
       payload = JSON.parse(response.body)
+      #Se hace otro get para probar los comentarios de un post
       get "/posts/#{post.id}/comments"
       payload_comments = JSON.parse(response.body)
+
+      #Pruebas para el payload
       expect(payload).to_not be_empty
       expect(payload["id"]).to eq(post.id)
       expect(payload["title"]).to eq(post.title)
@@ -55,6 +58,8 @@ RSpec.describe "Posts", type: :request do
       expect(payload["author"]["name"]).to eq(post.user.name)
       expect(payload["author"]["email"]).to eq(post.user.email)
       expect(payload["author"]["id"]).to eq(post.user.id)
+
+      #Pruebas para el payload_comments
       expect(payload_comments).to_not be_empty
       expect(payload_comments).to_not be_nil
       expect(response).to have_http_status(200)
