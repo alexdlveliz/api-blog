@@ -7,9 +7,11 @@ Rails.application.routes.draw do
   
   #Agregar las rutas relacionadas a un mismo recurso
   resources :posts do
+    get 'page/:page', action: :index, on: :collection
     member do 
       get :comments
     end
+    
   end
 
   resources :comments, only: [:index, :show, :create, :update]

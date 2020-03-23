@@ -12,9 +12,23 @@ class PostsController < ApplicationController
   end
 
   # GET /posts
+  # Para paginar necesitamos nuestros datos, pero ahora le damos un
+  # metodo llamado page en el cual recibe como parametro el número de página
+  # después el metodo per tiene que ver con la cantidad de datos que enviaremos
+  # por página.
+  # json_response contiene un header con los siguientes datos:
+  # total de datos en página, el número de la página siguiente y el número
+  # de la página anterior.
+  # En el body enviamos los datos que contiene nuestra consulta.
   def index
-    @posts = Post.where(published: true)
-    render json: @posts, status: :ok
+    @posts = Post.where(published: true).page(params[:page]).per(5)
+    json_response={
+      total_pagina: @posts.count,
+      pagina_siguiente: @posts.next_page,
+      pagina_anterior: @posts.prev_page,
+      datos: @posts
+    }
+    render json: json_response, status: :ok
   end
 
   # GET /posts/{id}
