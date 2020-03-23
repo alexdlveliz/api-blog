@@ -19,7 +19,7 @@ end
 
 5.times do |comment|
   Comment.create!(
-    comment: Faker::Lorem.paragraph,
+    content: Faker::Lorem.paragraph,
     user_id: User.first.id,
     post_id: Post.first.id
   )
