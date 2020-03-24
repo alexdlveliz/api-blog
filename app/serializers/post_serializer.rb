@@ -1,16 +1,9 @@
 require "byebug"
 class PostSerializer < ActiveModel::Serializer
-  attributes :id, :title, :content, :published, :author, :comments
-
-  #En los atributos definimos un 'author', pero debido a que
-  #en el modelo 'author' no existe, para eso declaramos el 
-  #método author: 
-  def author
-    user = self.object.user
-    {
-      name: user.name,
-      email: user.email,
-      id: user.id
-    }
+  attributes :id, :title, :content, :published, :creation
+  belongs_to :user
+  def creation
+    fecha = self.object[:created_at]
+    fecha.strftime("%d-%m-%y")
   end
 end
