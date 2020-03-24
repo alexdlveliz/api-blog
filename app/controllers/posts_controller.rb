@@ -1,3 +1,4 @@
+require 'pagination'
 class PostsController < ApplicationController
 
   #El rescue_from que más abajo se encuentre, más prioridad va a tener
@@ -12,23 +13,14 @@ class PostsController < ApplicationController
   end
 
   # GET /posts
-  # Para paginar necesitamos nuestros datos, pero ahora le damos un
-  # metodo llamado page en el cual recibe como parametro el número de página
-  # después el metodo per tiene que ver con la cantidad de datos que enviaremos
-  # por página.
-  # json_response contiene un header con los siguientes datos:
-  # total de datos en página, el número de la página siguiente y el número
-  # de la página anterior.
-  # En el body enviamos los datos que contiene nuestra consulta.
+  # Para la paginación primero obtenemos nuestros datos.
+  # luego de eso necesitamos incluir la librería pagination.
+  # luego en el render instanciamos la clase paginación con su método
+  # le mandamos los datos.
+  # Pagination.build_json se encuentra en lib/pagination.rb
   def index
-    @posts = Post.where(published: true).page(params[:page]).per(5)
-    json_response={
-      total_pagina: @posts.count,
-      pagina_siguiente: @posts.next_page,
-      pagina_anterior: @posts.prev_page,
-      datos: @posts
-    }
-    render json: json_response, status: :ok
+    @posts = Post.where(published: true).page(params[:page])
+    render json: Pagination.build_json(@posts), status: :ok
   end
 
   # GET /posts/{id}
