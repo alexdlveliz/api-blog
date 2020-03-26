@@ -5,15 +5,20 @@ Rails.application.routes.draw do
     #Vaya al controlador healt y al método health
   get '/health', to: 'health#health'
   
-  #Agregar las rutas relacionadas a un mismo recurso
+  #Rutas para los posts
   resources :posts do
     get 'page/:page', action: :index, on: :collection
     member do 
       get :comments
     end
-    
   end
 
+  #Rutas para los comentarios
   resources :comments, only: [:index, :show, :create, :update]
+
+  #Rutas para la authentication
+  resources :users, param: :_username
+  post '/auth/login', to: 'authentication#login'
+  get '/*a', to: 'application#not_found'
 
 end
