@@ -1,5 +1,4 @@
 require 'pagination'
-require 'byebug'
 class PostsController < ApplicationController
 
   # GET /posts
