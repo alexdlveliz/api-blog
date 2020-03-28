@@ -1,4 +1,5 @@
 require 'pagination'
+require 'byebug'
 class PostsController < ApplicationController
 
   # GET /posts
@@ -33,6 +34,10 @@ class PostsController < ApplicationController
     @post.update!(update_params)
     authorize @post
     render json: @post, status: :ok
+  end
+
+  def pundit_user
+    @user
   end
 
   # GET /posts/{id}/comments
