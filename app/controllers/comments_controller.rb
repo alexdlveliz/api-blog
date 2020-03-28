@@ -2,8 +2,8 @@ class CommentsController < ApplicationController
 
   #GET /comments
   def index
-    @comments = Comment.all
-    render json: @comments, status: :ok
+    @comments = Comment.where(post_id: params[:post_id]).page(params[:page])
+    render json: @comments, status: :ok, include: ['user'], meta: pagination(@comments)
   end
 
   # GET /comments/{id}

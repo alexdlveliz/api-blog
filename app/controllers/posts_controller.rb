@@ -1,16 +1,16 @@
-require 'pagination'
 class PostsController < ApplicationController
 
   # GET /posts
-  # Para la paginación primero obtenemos nuestros datos.
-  # luego de eso necesitamos incluir la librería pagination.
-  # luego en el render instanciamos la clase paginación con su método
-  # le mandamos los datos.
-  # Pagination.build_json se encuentra en lib/pagination.rb
+  # Para la paginación primero obtenemos nuestros datos en la página
+  # que viene como parametro.
+  # Despues se renderiza con adaptador json configurado en
+  # config/initializers/active_model_serializer.rb
+  # Luego se incluye la relación de usuarios y por último
+  # damos un meta, que lleva la información de la páginación
   def index
     @posts = Post.where(published: true).page(params[:page])
     authorize @posts
-    render json: Pagination.build_json(@posts), status: :ok
+    render json: @posts, status: :ok, include: ['user'] , meta: pagination(@posts)
   end
 
   # GET /posts/{id}
