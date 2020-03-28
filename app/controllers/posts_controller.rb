@@ -1,17 +1,6 @@
 require 'pagination'
 class PostsController < ApplicationController
 
-  #El rescue_from que más abajo se encuentre, más prioridad va a tener
-  #rescue_from para el manejo de excepciones. Es importante para las 
-  #pruebas que se hicieron
-  rescue_from Exception do |e|
-    render json: { error: e.message }, status: :internal_error
-  end
-
-  rescue_from ActiveRecord::RecordInvalid do |e|
-    render json: { error: e.message }, status: :unprocessable_entity
-  end
-
   # GET /posts
   # Para la paginación primero obtenemos nuestros datos.
   # luego de eso necesitamos incluir la librería pagination.
