@@ -20,18 +20,21 @@ class PostsController < ApplicationController
   # Pagination.build_json se encuentra en lib/pagination.rb
   def index
     @posts = Post.where(published: true).page(params[:page])
+    authorize @posts
     render json: Pagination.build_json(@posts), status: :ok
   end
 
   # GET /posts/{id}
   def show
     @post = Post.find(params[:id])
+    authorize @post
     render json: @post, status: :ok
   end
 
   # POST /posts
   def create
     @post = Post.create!(create_params)
+    authorize @post
     render json: @post, status: :created
   end
 
@@ -39,6 +42,7 @@ class PostsController < ApplicationController
   def update
     @post = Post.find(params[:id])
     @post.update!(update_params)
+    authorize @post
     render json: @post, status: :ok
   end
 
