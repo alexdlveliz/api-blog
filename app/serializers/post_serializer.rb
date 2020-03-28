@@ -1,4 +1,3 @@
-require "byebug"
 class PostSerializer < ActiveModel::Serializer
   attributes :id, :title, :content, :published, :creation
   belongs_to :user
