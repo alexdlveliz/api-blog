@@ -13,6 +13,9 @@ Rails.application.routes.draw do
     end
   end
 
+  #Rutas para las categoríass
+  resources :categories, only: [:index, :show, :create, :update]
+
   #Rutas para los comentarios
   resources :comments, only: [:index, :show, :create, :update]
 
