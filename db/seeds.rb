@@ -1,5 +1,11 @@
 require "faker"
 
+3.times do |category|
+  Category.create!(
+    name_category: Faker::Lorem.word
+  )
+end
+
 5.times do |user|
   User.create!(
     name: Faker::Name.name,
@@ -14,7 +20,8 @@ end
     title: Faker::Lorem.sentence,
     content: Faker::Lorem.paragraph,
     published: true,
-    user_id: User.first.id
+    user_id: User.first.id,
+    category_id: Category.first.id
   )
 end
 
