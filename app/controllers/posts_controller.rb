@@ -10,7 +10,7 @@ class PostsController < ApplicationController
   def index
     @posts = Post.where(published: true).page(params[:page])
     authorize @posts
-    render json: @posts, status: :ok, include: ['user'] , meta: pagination(@posts)
+    render json: @posts, status: :ok, include: ['user','category'] , meta: pagination(@posts,params)
   end
 
   # GET /posts/{id}
@@ -45,13 +45,41 @@ class PostsController < ApplicationController
     render json: @post, status: :ok
   end
 
+  def category
+    @posts = Post.where(published: true,
+    category_id: params[:id]).page(params[:page])
+    render json: @posts, status: :ok, include: ['user'], meta: pagination(@posts,params)
+  end
+
   private
-  
   def create_params
-    params.require(:post).permit(:title, :content, :published, :user_id)
+    params.require(:post).permit(:title, :content, :published, :user_id,:category_id)
   end
 
   def update_params
-    params.require(:post).permit(:title, :content, :published)
+    params.require(:post).permit(:title, :content, :published,:category_id)
+  end
+
+  # Acá estructuro la información de las siguientes páginas que contenga,
+  # lo llamo con meta: pagination en los controladores que necesite.
+  def pagination (object,params)
+    if !object.next_page.nil?
+      string_next = "/#{params[:controller]}"
+      string_next += (params[:action]!="index")? "/#{params[:action]}" : ""
+      string_next += "?page=#{object.next_page}"
+      string_next += (params[:action]!="index")? "&id=#{params[:id]}" : ""
+    end
+    if !object.prev_page.nil?
+      string_prev = "/#{params[:controller]}"
+      string_prev += (params[:action]!="index")? "/#{params[:action]}" : ""
+      string_prev += "?page=#{object.prev_page}"
+      string_prev += (params[:action]!="index")? "&id=#{params[:id]}" : ""
+    end
+    meta={
+      next_page: string_next,
+      prev_page: string_prev,
+      total_in_page: object.count
+    }
+    return meta
   end
 end

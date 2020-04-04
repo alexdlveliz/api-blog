@@ -5,12 +5,18 @@
 # de x post
 class PostSerializer < ActiveModel::Serializer
   attributes :title, :content, :creation, :comments_link
+  has_many :category do
+    category = self.object.category
+    {
+      name: category.name_category,
+    }
+  end
   belongs_to :user
   def creation
     fecha = self.object[:created_at]
     fecha.strftime("%d-%m-%y")
   end
   def comments_link
-    "localhost:3000/comments?post_id=#{@object[:id]} "
+    "/comments?post_id=#{@object[:id]} "
   end
 end

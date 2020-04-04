@@ -7,15 +7,19 @@ Rails.application.routes.draw do
   
   #Rutas para los posts
   resources :posts do
-    get 'page/:page', action: :index, on: :collection
     member do 
       get :comments
+    end
+    collection do
+      get :category
+      get 'page/:page', action: :index
+      
     end
   end
 
   #Rutas para las categoríass
   resources :categories, only: [:index, :show, :create, :update]
-
+  
   #Rutas para los comentarios
   resources :comments, only: [:index, :show, :create, :update]
 
