@@ -14,11 +14,14 @@ class ApplicationController < ActionController::API
       @decoded = JsonWebToken.decode(header)
       #Se verifica que el usuario exista
       @current_user = User.find(@decoded[:user_id])
-      byebug
     rescue ActiveRecord::RecordNotFound => e
       render json: { errors: e.message }, status: :unauthorized
     rescue JWT::DecodeError => e
       render json: { errors: e.message }, status: :unauthorized
     end
+  end
+
+  rescue_from Pundit::NotAuthorizedError do |exception|
+    puts "You do not have access to this page #{exception}"
   end
 end

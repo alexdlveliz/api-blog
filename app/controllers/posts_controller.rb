@@ -1,6 +1,9 @@
 class PostsController < ApplicationController
   before_action :authorize_request, except: :category
+  before_action :set_post, only: [:show, :update]
 
+  after_action :verify_authorized, except: :index
+  after_action :verify_policy_scoped, only: :index 
   # GET /posts
   # Para la paginación primero obtenemos nuestros datos en la página
   # que viene como parametro.
@@ -9,22 +12,26 @@ class PostsController < ApplicationController
   # Luego se incluye la relación de usuarios y por último
   # damos un meta, que lleva la información de la páginación
   def index
-    @posts = Post.where(published: true).page(params[:page])
+    @posts = policy_scope(Post).page(params[:page])
     render json: @posts, status: :ok, include: ['user','category'] , meta: pagination(@posts,params)
+  end
+
+  def new
+    @post = @current_user.posts.new
+    authorize @post
   end
 
   # GET /posts/{id}
   def show
-    @post = Post.find(params[:id])
     render json: @post, status: :ok
   end
 
   # POST /posts
   def create
-    if make_sure
-      @post = Post.create!(create_params)
-      #authorize @post
-      #byebug
+    @post = @current_user.posts.new(create_params)
+    byebug
+    authorize @post
+    if @post.save
       render json: @post, status: :created
     else
       render json: { errors: @post.errors.full_messages }
@@ -35,7 +42,7 @@ class PostsController < ApplicationController
   def update
     @post = Post.find(params[:id])
     @post.update!(update_params)
-    #authorize @post
+    authorize @post
     render json: @post, status: :ok
   end
 
@@ -45,12 +52,8 @@ class PostsController < ApplicationController
 
   # GET /posts/{id}/comments
   def comments
-    if make_sure
-      @post = Post.find(params[:id]).comments
-      render json: @post, status: :ok
-    else
-      render json: { errors: @post.errors.full_messages }
-    end
+    @post = Post.find(params[:id]).comments
+    render json: @post, status: :ok  
   end
 
   def category
@@ -60,19 +63,18 @@ class PostsController < ApplicationController
   end
 
   private
+
+  def set_post
+    @post = Post.find(params[:id])
+    authorize @post
+  end
+
   def create_params
     params.require(:post).permit(:title, :content, :published, :user_id,:category_id)
   end
 
   def update_params
     params.require(:post).permit(:title, :content, :published,:category_id)
-  end
-
-  def make_sure
-    user_make_sure = User.find_by(id: @current_user.id)
-    unless user_make_sure.role == 'guest'
-      return user_make_sure
-    end
   end
 
   # Acá estructuro la información de las siguientes páginas que contenga,
