@@ -6,7 +6,7 @@ require "faker"
   )
 end
 
-5.times do |user|
+3.times do |user|
   User.create!(
     name: Faker::Name.name,
     email: Faker::Internet.email,
@@ -15,7 +15,7 @@ end
   )
 end
 
-10.times do |post|
+3.times do |post|
   Post.create!(
     title: Faker::Lorem.sentence,
     content: Faker::Lorem.paragraph,
@@ -25,7 +25,7 @@ end
   )
 end
 
-5.times do |comment|
+3.times do |comment|
   Comment.create!(
     content: Faker::Lorem.paragraph,
     user_id: User.first.id,
