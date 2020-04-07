@@ -4,7 +4,6 @@ class ApplicationPolicy
   def initialize(user, record)
     @user = user
     @record = record
-    byebug
   end
 
   def index?
@@ -45,7 +44,6 @@ class ApplicationPolicy
     def initialize(user, scope)
       @user = user
       @scope = scope
-      byebug
     end
 
     def resolve

@@ -5,7 +5,6 @@ class UsersController < ApplicationController
   # GET /users
   def index
     @users = User.all
-    byebug
     render json: @users, status: :ok
   end
 

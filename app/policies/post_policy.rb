@@ -6,11 +6,11 @@ class PostPolicy < ApplicationPolicy
   end
 
   def new?
-    user.role == 'admin' || user.role == 'writer'
+    user_is_owner_of_record?
   end
   
   def create?
-    user.role == 'admin' || user.role == 'writer'
+    user_is_owner_of_record?
   end
 
   def show?
@@ -21,9 +21,12 @@ class PostPolicy < ApplicationPolicy
     user_is_owner_of_record?
   end
 
+  def category?
+    user_is_owner_of_record?
+  end
+
   private
   def user_is_owner_of_record?
     user.role == 'admin' || user.role == 'writer'
-    byebug
   end
 end
