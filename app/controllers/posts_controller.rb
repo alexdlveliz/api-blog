@@ -1,9 +1,8 @@
 class PostsController < ApplicationController
   include PaginationConcern
   before_action :authorize_request, except: [:index, :show]
-  before_action :set_post, only: [:show, :update]
 
-  after_action :verify_authorized, except: :index
+  after_action :verify_authorized, except: [:index, :show]
   # GET /posts
   # Para la paginación primero obtenemos nuestros datos en la página
   # que viene como parametro.
@@ -23,6 +22,7 @@ class PostsController < ApplicationController
 
   # GET /posts/{id}
   def show
+    @post = Post.find(params[:id])
     render json: @post, status: :ok
   end
 
@@ -63,11 +63,6 @@ class PostsController < ApplicationController
   end
 
   private
-  def set_post
-    @post = Post.find(params[:id])
-    authorize @post
-  end
-
   def create_params
     params.require(:post).permit(:title, :content, :published, :user_id,:category_id)
   end
