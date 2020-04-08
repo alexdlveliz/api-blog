@@ -1,10 +1,9 @@
 class PostsController < ApplicationController
   include PaginationConcern
-  before_action :authorize_request
+  before_action :authorize_request, except: [:index, :show]
   before_action :set_post, only: [:show, :update]
 
   after_action :verify_authorized, except: :index
-  after_action :verify_policy_scoped, only: :index 
   # GET /posts
   # Para la paginación primero obtenemos nuestros datos en la página
   # que viene como parametro.
@@ -13,7 +12,7 @@ class PostsController < ApplicationController
   # Luego se incluye la relación de usuarios y por último
   # damos un meta, que lleva la información de la páginación
   def index
-    @posts = policy_scope(Post).page(params[:page])
+    @posts = Post.where(published: true).page(params[:page])
     render json: @posts, status: :ok, include: ['user','category'] , meta: pagination(@posts,params)
   end
 

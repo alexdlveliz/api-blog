@@ -1,10 +1,13 @@
 class PostPolicy < ApplicationPolicy
-  class Scope < Scope
-    def resolve
-      scope.where(published: true).or(scope.where(user_id: @user.try(:id)))
-    end
+
+  def index?
+    true
   end
 
+  def show?
+    true
+  end
+  
   def new?
     user_is_owner_of_record?
   end
