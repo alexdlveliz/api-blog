@@ -4,13 +4,17 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @users = User.all
-    render json: @users, status: :ok
+    if make_sure
+      @users = User.all
+      render json: @users, status: :ok
+    end
   end
 
   # GET /users/{username}
   def show
-    render json: @user, status: :ok
+    if make_sure
+      render json: @user, status: :ok
+    end
   end
 
   # POST /users
@@ -26,13 +30,24 @@ class UsersController < ApplicationController
 
   # PUT /users/{username}
   def update
-    unless @user.update(user_params)
-      render json: { errors: @user.errors.full_messages },
-      status: :unprocessable_entity
+    if make_sure
+      unless @user.update(user_params)
+        render json: { errors: @user.errors.full_messages },
+        status: :unprocessable_entity
+      end
+    else
+      puts "Error"
     end
   end
 
-  private 
+  private
+  def make_sure
+    user_make_sure = User.find_by(id: @current_user.id)
+    unless user_make_sure.role == 'guest' || user_make_sure.role == 'writer'
+      return user_make_sure
+    end
+  end
+
   def find_user
     @user = User.find_by_username!(params[:_username])
     rescue ActiveRecord::RecordNotFound
