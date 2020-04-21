@@ -25,7 +25,7 @@ class PostPolicy < ApplicationPolicy
   end
 
   def category?
-    user_is_owner_of_record?
+    true
   end
 
   private

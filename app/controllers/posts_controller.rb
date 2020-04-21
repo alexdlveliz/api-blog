@@ -1,8 +1,8 @@
 class PostsController < ApplicationController
   include PaginationConcern
-  before_action :authorize_request, except: [:index, :show]
+  before_action :authorize_request, except: [:index, :show, :category]
 
-  after_action :verify_authorized, except: [:index, :show]
+  after_action :verify_authorized, except: [:index, :show, :category]
   # GET /posts
   # Para la paginación primero obtenemos nuestros datos en la página
   # que viene como parametro.
@@ -58,7 +58,6 @@ class PostsController < ApplicationController
   def category
     @posts = Post.where(published: true,
     category_id: params[:id]).page(params[:page])
-    authorize @posts
     render json: @posts, status: :ok, include: ['user'], meta: pagination(@posts,params)
   end
 
