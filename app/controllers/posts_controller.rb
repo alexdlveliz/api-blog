@@ -63,10 +63,10 @@ class PostsController < ApplicationController
 
   private
   def create_params
-    params.require(:post).permit(:title, :content, :published, :user_id,:category_id)
+    params.permit(:title, :content, :published, :user_id, :category_id)
   end
 
   def update_params
-    params.require(:post).permit(:title, :content, :published,:category_id)
+    params.permit(:title, :content, :published,:category_id)
   end
 end
