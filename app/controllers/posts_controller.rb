@@ -16,8 +16,7 @@ class PostsController < ApplicationController
   end
 
   def new
-    @post = @current_user.posts.new
-    authorize @post
+    @post = Post.new
   end
 
   # GET /posts/{id}
@@ -29,7 +28,8 @@ class PostsController < ApplicationController
   # POST /posts
   def create
     if make_sure
-      @post = Post.create!(create_params)
+      @post = Post.create(post_params)
+      byebug
       render json: @post, status: :created
     else
       render json: @post.errors
@@ -39,7 +39,7 @@ class PostsController < ApplicationController
   # PUT /posts/{id}
   def update
     @post = Post.find(params[:id])
-    @post.update!(update_params)
+    @post.update!(post_params)
     authorize @post
     render json: @post, status: :ok
   end
@@ -68,11 +68,7 @@ class PostsController < ApplicationController
     end
   end
 
-  def create_params
-    params.permit(:title, :content, :published, :user_id, :category_id)
-  end
-
-  def update_params
-    params.permit(:title, :content, :published,:category_id)
+  def post_params
+    params.require(:post).permit(:title, :content, :published, :user_id, :category_id)
   end
 end
