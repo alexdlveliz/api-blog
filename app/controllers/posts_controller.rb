@@ -37,14 +37,13 @@ class PostsController < ApplicationController
 
   # PUT /posts/{id}
   def update
-    @post = Post.find(params[:id])
-    @post.update!(post_params)
-    authorize @post
-    render json: @post, status: :ok
-  end
-
-  def pundit_user
-    User.find_by(id: @current_user.id)
+    if make_sure
+      @post = Post.find(params[:id])
+      @post.update!(post_params)
+      render json: @post, status: :ok
+    else
+      render json: @post.errors
+    end
   end
 
   # GET /posts/{id}/comments
