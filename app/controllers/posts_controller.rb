@@ -2,7 +2,7 @@ class PostsController < ApplicationController
   include PaginationConcern
   before_action :authorize_request, except: [:index, :show, :category]
 
-  after_action :verify_authorized, except: [:index, :show, :category]
+  #after_action :verify_authorized, except: [:index, :show, :category]
   # GET /posts
   # Para la paginación primero obtenemos nuestros datos en la página
   # que viene como parametro.
@@ -28,12 +28,11 @@ class PostsController < ApplicationController
 
   # POST /posts
   def create
-    @post = @current_user.posts.new(create_params)
-    authorize @post
-    if @post.save
+    if make_sure
+      @post = Post.create!(create_params)
       render json: @post, status: :created
     else
-      render json: { errors: @post.errors.full_messages }
+      render json: @post.errors
     end
   end
 
@@ -62,6 +61,13 @@ class PostsController < ApplicationController
   end
 
   private
+  def make_sure
+    user_make_sure = User.find_by(id: @current_user.id)
+    unless user_make_sure.role == 'guest'
+      return user_make_sure
+    end
+  end
+
   def create_params
     params.permit(:title, :content, :published, :user_id, :category_id)
   end
