@@ -29,7 +29,6 @@ class PostsController < ApplicationController
   def create
     if make_sure
       @post = Post.create(post_params)
-      byebug
       render json: @post, status: :created
     else
       render json: @post.errors
