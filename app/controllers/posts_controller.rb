@@ -48,6 +48,7 @@ class PostsController < ApplicationController
 
   # GET /posts/{id}/comments
   def comments
+    #Comentarios
     @post = Post.find(params[:id]).comments
     render json: @post, status: :ok  
   end
